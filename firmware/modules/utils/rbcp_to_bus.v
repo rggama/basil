@@ -23,7 +23,10 @@ module rbcp_to_bus (
     output wire          BUS_WR,
     output wire          BUS_RD,
     output wire [31:0]   BUS_ADD,
-    inout wire  [7:0]    BUS_DATA
+
+    //inout wire  [7:0]    BUS_DATA
+    input wire  [7:0]    BUS_DATA_IN,
+    output wire [7:0]    BUS_DATA_OUT
 
     //FUTURE
     //input wire BUS_ACK_REQ
@@ -45,8 +48,11 @@ assign BUS_ADD = RBCP_ADDR;
 assign BUS_WR = RBCP_WE & RBCP_ACT;
 assign BUS_RD = RBCP_RE & RBCP_ACT;
 
-assign BUS_DATA = BUS_WR ? RBCP_WD[7:0]: 8'bz;
-assign RBCP_RD[7:0] = BUS_WR ? 8'bz : BUS_DATA;
+//assign BUS_DATA = BUS_WR ? RBCP_WD[7:0]: 8'bz;
+//assign RBCP_RD[7:0] = BUS_WR ? 8'bz : BUS_DATA;
+
+assign BUS_DATA_OUT = RBCP_WD; //from RBCP(Write Data) to BUS
+assign RBCP_RD = BUS_DATA_IN;  //from BUS to RBCP(Read Data)
 
 /*
 wire [35:0] control_bus;

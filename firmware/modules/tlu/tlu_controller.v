@@ -22,9 +22,15 @@ module tlu_controller
     input wire                  BUS_CLK,
     input wire                  BUS_RST,
     input wire  [ABUSWIDTH-1:0] BUS_ADD,
-    inout wire      [7:0]       BUS_DATA,
+
+    //inout wire      [7:0]       BUS_DATA,
+    input wire [7:0]            BUS_DATA_IN,
+
     input wire                  BUS_RD,
     input wire                  BUS_WR,
+
+    output wire                 CS_OUT,
+    output wire     [7:0]       DATA_OUT,
 
     input wire                  TRIGGER_CLK, // clock of the TLU FSM, usually connect clock of command sequencer here
 
@@ -59,6 +65,9 @@ wire [ABUSWIDTH-1:0] IP_ADD;
 wire [7:0] IP_DATA_IN;
 wire [7:0] IP_DATA_OUT;
 
+//
+assign DATA_OUT = IP_DATA_OUT;
+
 bus_to_ip #(
     .BASEADDR(BASEADDR),
     .HIGHADDR(HIGHADDR) ,
@@ -67,13 +76,17 @@ bus_to_ip #(
     .BUS_RD(BUS_RD),
     .BUS_WR(BUS_WR),
     .BUS_ADD(BUS_ADD),
-    .BUS_DATA(BUS_DATA),
+    //.BUS_DATA(BUS_DATA),
+    .BUS_DATA_IN(BUS_DATA_IN),
+
 
     .IP_RD(IP_RD),
     .IP_WR(IP_WR),
     .IP_ADD(IP_ADD),
     .IP_DATA_IN(IP_DATA_IN),
-    .IP_DATA_OUT(IP_DATA_OUT)
+    .IP_DATA_OUT(IP_DATA_OUT),
+
+    .CS_OUT(CS_OUT)
 );
 
 

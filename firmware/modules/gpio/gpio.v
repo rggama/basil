@@ -1,6 +1,6 @@
 /**
  * ------------------------------------------------------------
- * Copyright (c) All rights reserved 
+ * Copyright (c) All rights reserved
  * SiLab, Institute of Physics, University of Bonn
  * ------------------------------------------------------------
  */
@@ -16,14 +16,18 @@ module gpio
     parameter IO_DIRECTION = 0,
     parameter IO_TRI = 0
 )(
-    BUS_CLK, 
+    BUS_CLK,
     BUS_RST,
     BUS_ADD,
-    BUS_DATA,
+    //BUS_DATA,
+    BUS_DATA_IN,
     BUS_RD,
     BUS_WR,
 
-    IO
+    IO,
+
+    CS_OUT,
+    DATA_OUT
 );
 
 localparam VERSION = 0;
@@ -40,28 +44,39 @@ localparam VERSION = 0;
 input wire                  BUS_CLK;
 input wire                  BUS_RST;
 input wire [ABUSWIDTH-1:0]  BUS_ADD;
-inout wire [7:0]            BUS_DATA;
+//inout wire [7:0]            BUS_DATA;
+input wire [7:0]            BUS_DATA_IN;
 input wire                  BUS_RD;
 input wire                  BUS_WR;
 inout wire [IO_WIDTH-1:0]   IO;
+
+//
+output wire                 CS_OUT;
+output wire [7:0]           DATA_OUT;
 
 wire IP_RD, IP_WR;
 wire [ABUSWIDTH-1:0] IP_ADD;
 wire [7:0] IP_DATA_IN;
 reg [7:0] IP_DATA_OUT;
 
+//
+assign DATA_OUT = IP_DATA_OUT;
+
 bus_to_ip #( .BASEADDR(BASEADDR), .HIGHADDR(HIGHADDR), .ABUSWIDTH(ABUSWIDTH) ) i_bus_to_ip
 (
     .BUS_RD(BUS_RD),
     .BUS_WR(BUS_WR),
     .BUS_ADD(BUS_ADD),
-    .BUS_DATA(BUS_DATA),
+    //.BUS_DATA(BUS_DATA),
+    .BUS_DATA_IN(BUS_DATA_IN),
 
     .IP_RD(IP_RD),
     .IP_WR(IP_WR),
     .IP_ADD(IP_ADD),
     .IP_DATA_IN(IP_DATA_IN),
-    .IP_DATA_OUT(IP_DATA_OUT) 
+    .IP_DATA_OUT(IP_DATA_OUT),
+
+    .CS_OUT(CS_OUT)
 );
 
 // CORE //
@@ -86,7 +101,7 @@ always @ (posedge BUS_CLK) begin
     end
 end
 
-assign SOFT_RST = (IP_ADD==0 && IP_WR);  
+assign SOFT_RST = (IP_ADD==0 && IP_WR);
 
 wire RST;
 assign RST = BUS_RST | SOFT_RST;

@@ -89,7 +89,7 @@ wire [15:0] CONF_CMD_SIZE; // 3 - 4
 wire [31:0] CONF_REPEAT_COUNT; // 5 - 8
 wire [15:0] CONF_START_REPEAT; // 9 - 10
 wire [15:0] CONF_STOP_REPEAT; // 11 - 12
-wire [7:0] CONF_OUTPUT_ENABLE; //13
+(* mark_debug = "true" *) wire [7:0] CONF_OUTPUT_ENABLE; //13
 
 // ATTENTION:
 // -(CONF_CMD_SIZE - CONF_START_REPEAT - CONF_STOP_REPEAT) must be greater than or equal to 2
